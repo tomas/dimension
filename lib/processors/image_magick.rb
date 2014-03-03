@@ -9,24 +9,25 @@ module ImageMagickProcessor
   end
 
   def image_data
-    IO.read(file)
+    IO.read(@temp_file)
   end
 
   def save_as(new_file_path)
-    return if new_file_path == @output_file
-    FileUtils.mv(@output_file, new_file_path)
+    return if new_file_path == @temp_file
+    FileUtils.mv(@temp_file, new_file_path)
   end
 
   def get_new_geometry
-    self.class.new(@output_file).geometry
+    self.class.new(@temp_file).geometry
   end
 
   def save!
-
+    FileUtils.mv(@temp_file, file)
   end
 
   def close
-
+    log "Removing temp file: #{@temp_file}"
+    FileUtils.rm_f(@temp_file)
   end
 
   private
@@ -55,9 +56,8 @@ module ImageMagickProcessor
   end
 
   def convert(args)
-    # puts args
-    out = `convert "#{file}" #{args} "#{@output_file}"`
-    puts out
+    @temp_file = "/tmp/#{$$}.#{File.basename(file)}"
+    out = `convert "#{file}" #{args} "#{@temp_file}"`
   end
 
   def image_details

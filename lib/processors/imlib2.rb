@@ -11,23 +11,30 @@ module Imlib2Processor
   end
 
   def format
-    image.format.gsub('jpeg', 'jpg')
+    image.format # .gsub('jpeg', 'jpg')
+  rescue ArgumentError
+    File.extname(file).sub('.', '')
   end
 
   def image_data
-    @image.data
+    unless @temp_file
+      @temp_file = "/tmp/#{$$}.#{File.basename(file)}"
+      save_as(@temp_file)
+    end
+    IO.read(@temp_file)
   end
 
-  def save_as(file)
-    @image.save(file)
+  def save_as(new_file_path)
+    image.save(new_file_path)
   end
 
   def save!
-    @image.save(@file)
+    image.save(file)
   end
 
   def close
-    @image.delete!(true) # free image, and de-cache it too
+    log "Closing image."
+    image.delete!(true) # free image, and de-cache it too
   end
 
   def get_new_geometry
@@ -50,7 +57,7 @@ module Imlib2Processor
 #    new_w, new_h = get_resize_geometry(w, h, false)
 #    x = (w.to_i - new_w)
 #    y = (h.to_i - new_h)
-#    @image.crop_scaled!(x*-1, y*-1, @image.w + x*2, @image.h + y*2, w.to_i, h.to_i)
+#    image.crop_scaled!(x*-1, y*-1, image.w + x*2, image.h + y*2, w.to_i, h.to_i)
 #  end
 
   def resize_and_crop(w, h, gravity)
@@ -59,22 +66,23 @@ module Imlib2Processor
     # crop_scaled(0, 0, w, h)
 
     offset = get_offset(w, h, gravity)
-    # original_height = @image.h
-    # original_width  = @image.w
+    # original_height = image.h
+    # original_width  = image.w
 
-    @image.crop!(offset[0], offset[1], w.to_i, h.to_i)
+    image.crop!(offset[0], offset[1], w.to_i, h.to_i)
     # crop_scaled(offset[0], offset[1], new_w, new_h)
   end
 
   def crop(width, height, x, y, gravity)
     rect = [x, y, width, height]
-    @image.crop!(rect)
+    puts rect
+    puts image
+    image.crop!(rect)
   end
 
   def crop_scaled(x, y, new_w, new_h)
-    log "Resizing #{@image.w}x#{@image.h} to #{new_w}x#{new_h}"
-    log "Offset at #{x},#{y}" # if (x + y) == 0
-    @image.crop_scaled!(x, y, @image.w, @image.h, new_w.to_i, new_h.to_i)
+    log "Resizing #{image.w}x#{image.h} to #{new_w}x#{new_h}. Offset at #{x},#{y}"
+    image.crop_scaled!(x, y, image.w, image.h, new_w.to_i, new_h.to_i)
   end
 
   def get_offset(w, h, gravity = 'c')
@@ -86,8 +94,8 @@ module Imlib2Processor
   end
 
   def get_center_offset(w, h)
-    w_diff = @image.w - w.to_i
-    h_diff = @image.h - h.to_i
+    w_diff = image.w - w.to_i
+    h_diff = image.h - h.to_i
     log "Width diff: #{w_diff}"
     log "Height diff: #{h_diff}"
 
@@ -102,19 +110,19 @@ module Imlib2Processor
 
   def get_resize_geometry(w, h, to_longer = true)
     if to_longer
-      if @image.w < @image.h
-        new_h = ((w.to_f / @image.w) * @image.h).round
+      if image.w < image.h
+        new_h = ((w.to_f / image.w) * image.h).round
         return w.to_i, new_h
       else
-        new_w = ((h.to_f / @image.h) * @image.w).round
+        new_w = ((h.to_f / image.h) * image.w).round
         return new_w, h.to_i
       end
     else
-      if w && @image.w > @image.h
-        new_h = ((w.to_f / @image.w) * @image.h).round
+      if w && image.w >= image.h
+        new_h = ((w.to_f / image.w) * image.h).round
         return w.to_i, new_h
       else
-        new_w = ((h.to_f / @image.h) * @image.w).round
+        new_w = ((h.to_f / image.h) * image.w).round
         return new_w, h.to_i
       end
     end

@@ -12,7 +12,7 @@ Benchmark.bm do |x|
   x.report do
     Thumbnail.processor = 'imlib2'
     b = Thumbnail.new(file)
-    res = b.crop(geometry)
+    res = b.generate!(geometry)
     puts res.inspect
   end
 
@@ -21,7 +21,7 @@ Benchmark.bm do |x|
   x.report do
     Thumbnail.processor = 'image_magick'
     a = Thumbnail.new(file)
-    res = a.crop(geometry)
+    res = a.generate!(geometry)
     puts res.inspect
   end
 
