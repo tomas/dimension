@@ -95,7 +95,7 @@ class Thumbnail
   end
 
   def to_response(env = nil)
-    [200, {'Content-Type' => "image/jpeg"}, image_data]
+    [200, {'Content-Type' => "image/#{format}"}, image_data]
   end
 
 end

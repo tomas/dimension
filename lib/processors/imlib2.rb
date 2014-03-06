@@ -16,6 +16,17 @@ module Imlib2Processor
     File.extname(file).sub('.', '')
   end
 
+  def to_rgba
+    bytes = data.bytes
+    (1..bytes.length).step(4).map { |i| bytes[i..i+2] << bytes[i-1] }.flatten
+  end
+
+  # transforms data (RGBA buffer) into a array of RGB values
+  def to_rgb
+    bytes = data.bytes
+    (1..bytes.length).step(4).map { |i| [bytes[i-1],bytes[i],bytes[i+1]] }.flatten
+  end
+
   def image_data
     unless @temp_file
       @temp_file = "/tmp/#{$$}.#{File.basename(file)}"
@@ -34,6 +45,7 @@ module Imlib2Processor
 
   def close
     log "Closing image."
+    FileUtils.rm(@temp_file) if @temp_file
     image.delete!(true) # free image, and de-cache it too
   end
 
