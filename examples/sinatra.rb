@@ -27,8 +27,6 @@ get '/images/:file' do
   end
 
   thumb.generate(params[:geometry]) do
-    @out = thumb.to_response
+    thumb.to_response
   end
-
-  @out
 end

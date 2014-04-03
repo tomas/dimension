@@ -35,8 +35,10 @@ class Image
 
   def generate(geometry, &block)
     new_geometry = resize_to(geometry)
-    yield({:width => new_geometry[0], :height => new_geometry[1]}) if block_given?
-    close && self
+    out = { :width => new_geometry[0], :height => new_geometry[1] }
+    out = yield(out) if block_given?
+    close
+    out
   end
 
   def generate!(geometry, output_file = nil)
@@ -69,7 +71,7 @@ class Image
     end
 
     log "Writing file: #{out_file}"
-    save_as(out_file)
+    save_as(out_file) or return false
     close
 
     {:file => out_file, :width => new_geometry[0], :height => new_geometry[1]}
