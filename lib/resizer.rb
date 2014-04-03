@@ -32,6 +32,6 @@ rescue LoadError
   if system("convert -h")
     Resizer.processor = 'image_magick'
   else
-    puts "No available processors found. Please install ruby-imlib2 or ImageMagick"
+    puts "No available processors found. Please install ruby-imlib2 or ImageMagick."
   end
 end
