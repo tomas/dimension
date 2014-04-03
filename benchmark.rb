@@ -10,18 +10,18 @@ puts "Processing #{file}"
 Benchmark.bm do |x|
 
   x.report do
-    Thumbnail.processor = 'imlib2'
-    b = Thumbnail.new(file)
-    res = b.generate!(geometry)
+    Resizer.processor = 'imlib2'
+    a = Resizer.open(file)
+    res = a.generate!(geometry)
     puts res.inspect
   end
 
   sleep 1
 
   x.report do
-    Thumbnail.processor = 'image_magick'
-    a = Thumbnail.new(file)
-    res = a.generate!(geometry)
+    Resizer.processor = 'image_magick'
+    b = Resizer.open(file)
+    res = b.generate!(geometry)
     puts res.inspect
   end
 

@@ -1,13 +1,13 @@
-require './lib/thumbnail'
+require './lib/resizer'
 require 'benchmark'
 
-file = ARGV[0] or abort('File needed')
-geometry = ARGV[1] or abort('Geometry required: 100x100#ne')
+file    = ARGV[0] or abort('File needed. Try with examples/assets/chair.jpg')
+geometry = ARGV[1] or abort('Geometry required. Example: 100x100#ne')
 
-Thumbnail.processor = 'imlib2'
-# Thumbnail.processor = 'image_magick'
+# Resizer.processor = 'imlib2'
+# Resizer.processor = 'image_magick'
 
-thumb = Thumbnail.new(file)
+thumb = Resizer.open(file)
 
 # thumb.crop(geometry) do |res|
   # puts thumb.format

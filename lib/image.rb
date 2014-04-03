@@ -1,13 +1,8 @@
 require 'fileutils'
 
-class Thumbnail
+module Resizer
 
-  ROOT = File.expand_path(File.dirname(__FILE__))
-
-  PROCESSORS = {
-    'imlib2' => 'Imlib2Processor',
-    'image_magick' => 'ImageMagickProcessor'
-  }
+class Image
 
   GRAVITIES = {
     'nw' => 'NorthWest',
@@ -26,16 +21,6 @@ class Thumbnail
   CROPPED_RESIZE_GEOMETRY = /^(\d+)x(\d+)#(\w{1,2})?$/ # e.g. '20x50#ne'
   CROP_GEOMETRY           = /^(\d+)x(\d+)([+-]\d+)?([+-]\d+)?(\w{1,2})?$/ # e.g. '30x30+10+10'
 
-  def self.processor
-    @processor
-  end
-
-  def self.processor=(name)
-    @processor = PROCESSORS[name] or raise "Processor not found: #{name}"
-    require File.join(ROOT, 'processors', name)
-    self.include(Kernel.const_get(@processor))
-  end
-
   attr_reader :file
 
   def initialize(file)
@@ -49,18 +34,17 @@ class Thumbnail
   end
 
   def generate(geometry, &block)
-    process(geometry)
-    new_geometry = get_new_geometry
+    new_geometry = resize_to(geometry)
     yield({:width => new_geometry[0], :height => new_geometry[1]}) if block_given?
     close && self
   end
 
   def generate!(geometry, output_file = nil)
-    process(geometry)
+    resize_to(geometry)
     save(output_file)
   end
 
-  def process(geometry)
+  def resize_to(geometry)
     case geometry
       when RESIZE_GEOMETRY
         log "Resize: #{$1}x#{$2}"
@@ -74,6 +58,7 @@ class Thumbnail
       else
         raise ArgumentError, "Didn't recognise the geometry string #{geometry}"
     end
+    get_new_geometry
   end
 
   def save(out_file)
@@ -91,11 +76,13 @@ class Thumbnail
   end
 
   def log(msg)
-    puts "[Thumbnail::#{self.class.processor}] #{msg}"
+    puts "[Resizer::#{Resizer.processor}] #{msg}"
   end
 
   def to_response(env = nil)
     [200, {'Content-Type' => "image/#{format}"}, image_data]
   end
+
+end
 
 end

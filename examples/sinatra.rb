@@ -1,7 +1,5 @@
 require 'sinatra'
-require './../lib/thumbnail'
-# Thumbnail.processor = 'image_magick'
-Thumbnail.processor = 'imlib2'
+require './../lib/redraw'
 
 ROOT = File.expand_path(File.dirname(__FILE__))
 
@@ -23,7 +21,7 @@ get '/images/:file' do
   end
 
   begin
-    thumb = Thumbnail.new(file)
+    thumb = Resizer.open(file)
   rescue => e
     return e.message
   end
