@@ -86,9 +86,7 @@ module Imlib2Processor
   end
 
   def crop(width, height, x, y, gravity)
-    rect = [x, y, width, height]
-    puts rect
-    puts image
+    rect = [x || 0, y || 0, width.to_i, height.to_i]
     image.crop!(rect)
   end
 

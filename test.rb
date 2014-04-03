@@ -2,7 +2,7 @@ require './lib/resizer'
 require 'benchmark'
 
 file    = ARGV[0] or abort('File needed. Try with examples/assets/chair.jpg')
-geometry = ARGV[1] or abort('Geometry required. Example: 100x100#ne')
+geometry = ARGV[1] or abort('Geometry required. Example: 100x100')
 
 # Resizer.processor = 'imlib2'
 # Resizer.processor = 'image_magick'

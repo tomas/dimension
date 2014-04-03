@@ -1,7 +1,7 @@
-require 'sinatra'
-require './../lib/redraw'
-
 ROOT = File.expand_path(File.dirname(__FILE__))
+
+require 'sinatra'
+require ROOT + '/../lib/resizer'
 
 get '/' do
   images = Dir.glob(File.join(ROOT, 'assets') + '/*')

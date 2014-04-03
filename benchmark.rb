@@ -1,4 +1,4 @@
-require './lib/thumbnail'
+require './lib/resizer'
 require 'benchmark'
 
 file = ARGV[0] or abort('File needed')
