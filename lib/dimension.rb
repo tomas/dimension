@@ -1,6 +1,7 @@
-require File.expand_path(File.dirname(__FILE__)) + '/image'
+# require File.expand_path(File.dirname(__FILE__)) + '/image'
+require 'dimension/image'
 
-module Resizer 
+module Dimension
 
   ROOT = File.expand_path(File.dirname(__FILE__))
 
@@ -27,10 +28,10 @@ end
 
 begin
   require 'imlib2'
-  Resizer.processor = 'imlib2'
+  Dimension.processor = 'imlib2'
 rescue LoadError
   if system("convert -h")
-    Resizer.processor = 'image_magick'
+    Dimension.processor = 'image_magick'
   else
     puts "No available processors found. Please install ruby-imlib2 or ImageMagick."
   end

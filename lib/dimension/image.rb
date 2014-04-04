@@ -1,6 +1,6 @@
 require 'fileutils'
 
-module Resizer
+module Dimension
 
 class Image
 
@@ -24,8 +24,8 @@ class Image
   attr_reader :file
 
   def initialize(file)
-    unless Resizer.processor
-      raise "No processor set! Please set Resize.processor = 'imlib2' or 'image_magick'"
+    unless Dimension.processor
+      raise "No processor set! Please set Dimension.processor = 'imlib2' or 'image_magick'"
     end
 
     @file = File.expand_path(file)
@@ -35,15 +35,16 @@ class Image
 
   def generate(geometry, &block)
     new_geometry = resize_to(geometry)
-    out = { :width => new_geometry[0], :height => new_geometry[1] }
-    out = yield(out) if block_given?
-    close
-    out
+    if block_given?
+      out = yield(new_geometry)
+      close
+    end
+    out || self
   end
 
   def generate!(geometry, output_file = nil)
     resize_to(geometry)
-    save(output_file)
+    save(output_file) && self
   end
 
   def resize_to(geometry)
@@ -60,7 +61,9 @@ class Image
       else
         raise ArgumentError, "Didn't recognise the geometry string #{geometry}"
     end
-    get_new_geometry
+    
+    new_geometry = get_new_geometry
+    {:width => new_geometry[0], :height => new_geometry[1]}
   end
 
   def save(out_file)
@@ -77,12 +80,25 @@ class Image
     {:file => out_file, :width => new_geometry[0], :height => new_geometry[1]}
   end
 
-  def log(msg)
-    puts "[Resizer::#{Resizer.processor}] #{msg}"
+  def to_s
+    image_data
+  end
+  
+  def to_a
+    to_response
+  end
+  
+  def inspect
+    geometry = get_new_geometry
+    "#<Dimension::Image:#{object_id} @width=#{geometry[0]}, @height=#{geometry[1]}>"
   end
 
   def to_response(env = nil)
     [200, {'Content-Type' => "image/#{format}"}, image_data]
+  end
+
+  def log(msg)
+    puts "[Dimension::#{Dimension.processor}] #{msg}"
   end
 
 end
