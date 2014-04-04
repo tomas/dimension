@@ -16,7 +16,8 @@ module Dimension
 
   def self.processor=(name)
     @processor = PROCESSORS[name] or raise "Processor not found: #{name}"
-    require File.join(ROOT, 'processors', name)
+    # require File.join(ROOT, 'dimension', 'processors', name)
+    require_relative "dimension/processors/#{name}"
     Image.include(Kernel.const_get(@processor))
   end
   

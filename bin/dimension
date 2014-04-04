@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require './lib/dimension'
+require 'benchmark'
+
+file     = ARGV[0] or abort('File needed. Try with examples/assets/chair.jpg')
+geometry = ARGV[1] or abort('Geometry required. Example: 100x100')
+
+thumb = Dimension.open(file)
+res = thumb.generate!(geometry)
+# puts res.inspect

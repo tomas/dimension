@@ -3,7 +3,7 @@ require File.expand_path("../lib/dimension/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "dimension"
-  s.version     = Dagger::VERSION
+  s.version     = Dimension::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Tomás Pollak']
   s.email       = ['tomas@forkhq.com']
