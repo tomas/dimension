@@ -1,4 +1,4 @@
-require './lib/resizer'
+require './lib/dimension'
 require 'benchmark'
 
 file = ARGV[0] or abort('File needed')
@@ -10,8 +10,8 @@ puts "Processing #{file}"
 Benchmark.bm do |x|
 
   x.report do
-    Resizer.processor = 'imlib2'
-    a = Resizer.open(file)
+    Dimension.processor = 'imlib2'
+    a = Dimension.open(file)
     res = a.generate!(geometry)
     puts res.inspect
   end
@@ -19,8 +19,8 @@ Benchmark.bm do |x|
   sleep 1
 
   x.report do
-    Resizer.processor = 'image_magick'
-    b = Resizer.open(file)
+    Dimension.processor = 'image_magick'
+    b = Dimension.open(file)
     res = b.generate!(geometry)
     puts res.inspect
   end

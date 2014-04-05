@@ -1,7 +1,7 @@
 ROOT = File.expand_path(File.dirname(__FILE__))
 
 require 'sinatra'
-require ROOT + '/../lib/resizer'
+require ROOT + '/../lib/dimension'
 
 get '/' do
   images = Dir.glob(File.join(ROOT, 'assets') + '/*')
@@ -21,7 +21,7 @@ get '/images/:file' do
   end
 
   begin
-    thumb = Resizer.open(file)
+    thumb = Dimension.open(file)
   rescue => e
     return e.message
   end
