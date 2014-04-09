@@ -3,9 +3,15 @@
 require './lib/dimension'
 require 'benchmark'
 
-file     = ARGV[0] or abort('File needed. Try with examples/assets/chair.jpg')
-geometry = ARGV[1] or abort('Geometry required. Example: 100x100')
+def usage
+  puts 'Usage:   dimension [file] [geometry] [output file/path]'
+  puts 'Example: dimension example/assets/chair.jpg 100x100 /tmp'
+  abort
+end
+
+file     = ARGV[0] # or abort('File needed. Try with examples/assets/chair.jpg')
+geometry = ARGV[1] or usage
+output   = ARGV[2]
 
 thumb = Dimension.open(file)
-res = thumb.generate!(geometry)
-# puts res.inspect
+res = thumb.generate!(geometry, output)

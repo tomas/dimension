@@ -1,5 +1,5 @@
-# require File.expand_path(File.dirname(__FILE__)) + '/image'
-require 'dimension/image'
+require File.expand_path(File.dirname(__FILE__)) + '/dimension/image'
+# require 'dimension/image'
 
 module Dimension
 
@@ -20,11 +20,11 @@ module Dimension
     require_relative "dimension/processors/#{name}"
     Image.include(Kernel.const_get(@processor))
   end
-  
+
   def self.open(file)
     Image.new(file)
   end
-  
+
 end
 
 begin

@@ -29,6 +29,9 @@ class Image
     end
 
     @file = File.expand_path(file)
+    @name = File.basename(file)
+    @path = File.dirname(@file)
+
     raise ArgumentError, "File not found: #{@file}" unless File.exist?(@file)
     log "File loaded: #{file}. Geometry: #{geometry.join('x')}"
   end
@@ -61,7 +64,7 @@ class Image
       else
         raise ArgumentError, "Didn't recognise the geometry string #{geometry}"
     end
-    
+
     new_geometry = get_new_geometry
     {:width => new_geometry[0], :height => new_geometry[1]}
   end
@@ -69,8 +72,15 @@ class Image
   def save(out_file)
     new_geometry = get_new_geometry
 
+    path = @path
+
+    if out_file and File.directory?(out_file)
+      path = File.expand_path(out_file)
+      out_file = nil
+    end
+
     if out_file.nil?
-      out_file = file.sub(File.extname(file), '-' + new_geometry.join('x') + File.extname(file))
+      out_file = File.join(path, @name.sub(File.extname(file), '-' + new_geometry.join('x') + File.extname(file)))
     end
 
     log "Writing file: #{out_file}"
@@ -83,11 +93,11 @@ class Image
   def to_s
     image_data
   end
-  
+
   def to_a
     to_response
   end
-  
+
   def inspect
     geometry = get_new_geometry
     "#<Dimension::Image:#{object_id} @width=#{geometry[0]}, @height=#{geometry[1]}>"
