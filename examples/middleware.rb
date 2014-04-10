@@ -11,6 +11,8 @@ app = Rack::Builder.new do
 
   root = File.join(ROOT, 'assets')
 
+  use Rack::CommonLogger
+
   use Dimension::Middleware, { :root => root }
 
   use Rack::Static,
@@ -21,6 +23,6 @@ app = Rack::Builder.new do
     [ 200, { 'Content-Type'  => 'text/html'}, ['Not Found.'] ]
   }
 
-end.to_app
+end
 
-Thin::Server.start('0.0.0.0', 4567, app)
+Thin::Server.start('0.0.0.0', 4567, app.to_app)

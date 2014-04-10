@@ -20,7 +20,7 @@ module Dimension
       
         image = Dimension.open(file)
         image.generate(geometry) do
-          image.to_response
+          return image.to_response
         end
       end
 
