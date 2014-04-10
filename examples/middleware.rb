@@ -9,11 +9,12 @@ require ROOT + '/../lib/dimension/middleware'
 
 app = Rack::Builder.new do
 
-  root = File.join(ROOT, 'assets')
+  # root = File.join(ROOT, 'assets')
+  root = ROOT
 
   use Rack::CommonLogger
 
-  use Dimension::Middleware, { :root => root }
+  use Dimension::Middleware, { :root => root, :throttle => 1, :save => false }
 
   use Rack::Static,
     :urls => ['/'],

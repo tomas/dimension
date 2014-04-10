@@ -1,25 +1,41 @@
+require 'rack/throttle'
+
 module Dimension
 
   class Middleware
   
-    FORMATS = ['.jpg', '.png', '.gif', '.jpeg']
+    EXCEEDED = [403, {'Content-Type' => 'text/plain'}, ['Limit Exceeded.']]
   
     def initialize(app, opts = {})
       @app  = app
       @root = File.expand_path(opts[:root] || Dir.pwd())
+      @save = opts[:save]
+      
+      if opts[:throttle]
+        @throttle = Rack::Throttle::Interval.new(self, :min => opts[:throttle])
+      end
     end
   
     def call(env)
       url      = env['PATH_INFO']
-      query    = env['QUERY_STRING']
-      geometry = query && query[/geometry=([^\&|$]+)/, 1]
-    
-      if geometry and ext = File.extname(url) and ext != '' and FORMATS.include?(ext.downcase)
-        file = File.join(@root, url)
-        # puts 'Processing image: ' + file
+      geometry = url[/-([0-9x:-]+)\.(png|gif|jpe?g)/, 1]
       
-        image = Dimension.open(file)
+      return @app.call(env) unless geometry
+
+      resized  = File.join(@root, url)
+      original = resized.sub("-#{geometry}", '')
+    
+      if !File.exist?(resized) and File.exist?(original)
+        
+        if @throttle
+          req = Rack::Request.new(env)
+          return EXCEEDED unless @throttle.allowed?(req)
+        end
+        
+        # puts 'Processing image: ' + file
+        image = Dimension.open(original)
         image.generate(geometry) do
+          image.save_as(resized) if @save
           return image.to_response
         end
       end

@@ -104,7 +104,7 @@ class Image
   end
 
   def to_response(env = nil)
-    [200, {'Content-Type' => "image/#{format}"}, image_data]
+    [200, {'Content-Type' => "image/#{format}"}, [image_data]]
   end
 
   def log(msg)
