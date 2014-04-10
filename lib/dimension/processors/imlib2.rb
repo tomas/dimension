@@ -86,7 +86,7 @@ module Imlib2Processor
   end
 
   def crop(width, height, x, y, gravity)
-    rect = [x || 0, y || 0, width.to_i, height.to_i]
+    rect = [(x || 0).to_i, (y || 0).to_i, width.to_i, height.to_i]
     image.crop!(rect)
   end
 
@@ -119,7 +119,7 @@ module Imlib2Processor
   end
 
   def get_resize_geometry(w, h, to_longer = true)
-    if to_longer
+    if to_longer or h.nil?
       if image.w < image.h
         new_h = ((w.to_f / image.w) * image.h).round
         return w.to_i, new_h

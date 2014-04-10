@@ -18,7 +18,7 @@ class Image
 
   # Geometry string patterns
   RESIZE_GEOMETRY         = /^(\d+)?x(\d+)?[><%^!]?$|^\d+@$/ # e.g. '300x200!'
-  CROPPED_RESIZE_GEOMETRY = /^(\d+)x(\d+)#(\w{1,2})?$/ # e.g. '20x50#ne'
+  CROPPED_RESIZE_GEOMETRY = /^(\d+)x(\d+)[:|#](\w{1,2})?$/ # e.g. '20x50:ne'
   CROP_GEOMETRY           = /^(\d+)x(\d+)([+-]\d+)?([+-]\d+)?(\w{1,2})?$/ # e.g. '30x30+10+10'
 
   attr_reader :file
@@ -52,7 +52,7 @@ class Image
 
   def resize_to(geometry)
     case geometry
-      when RESIZE_GEOMETRY
+      when RESIZE_GEOMETRY 
         log "Resize -- #{$1}x#{$2}"
         resize($1, $2)
       when CROPPED_RESIZE_GEOMETRY
