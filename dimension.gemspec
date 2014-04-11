@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'
   # s.bindir       = 'bin'
+  s.add_runtime_dependency 'rack-throttle', '~> 0.3'
 end
