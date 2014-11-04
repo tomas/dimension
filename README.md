@@ -41,7 +41,7 @@ You can also pass a block, which will ensure the original image is closed after 
 
 # Resizing geometries
 
-This is taken directly from the excellent Dragonfly gem. 
+This is taken directly from the excellent [Dragonfly gem](http://markevans.github.io/dragonfly/imagemagick/#processors). The N/S/W/E gravities are not supported, though.
 
 Author
 ======
