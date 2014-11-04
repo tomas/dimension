@@ -14,7 +14,7 @@ Fast, simplified image resizing for Ruby. No ImageMagick.
 Or generate and write file automatically.
 
 ``` rb
-  thumb = Dimension.new('tux.png')
+  thumb = Dimension.open('tux.png')
   thumb.generate!('100x300!') # will write file as 'tux-100x300.png'
 ```
 
