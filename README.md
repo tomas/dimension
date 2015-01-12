@@ -4,7 +4,7 @@ Dimension
 Fast, simplified image resizing for Ruby. No ImageMagick.
 
 ``` rb
-  require 'Dimension'
+  require 'dimension'
    
   thumb = Dimension.open('tux.png')
   thumb.generate('100x100') # => { :width => 100, :height => 100 }
