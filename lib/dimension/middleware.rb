@@ -18,7 +18,7 @@ module Dimension
   
     def call(env)
       url      = env['PATH_INFO']
-      geometry = url[/-([0-9x:-]+)\.(png|gif|jpe?g)/, 1]
+      geometry = url[/-([0-9x:-]+)\.(png|gif|jpe?g)/i, 1]
       
       return @app.call(env) unless geometry
 
