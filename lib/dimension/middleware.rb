@@ -1,3 +1,4 @@
+require 'dimension'
 require 'rack/throttle'
 
 module Dimension
