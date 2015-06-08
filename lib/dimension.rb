@@ -31,7 +31,8 @@ begin
   require 'imlib2'
   Dimension.processor = 'imlib2'
 rescue LoadError
-  if system("convert -h")
+  out = `convert -h`
+  if $?.success?
     Dimension.processor = 'image_magick'
   else
     puts "No available processors found. Please install ruby-imlib2 or ImageMagick."
