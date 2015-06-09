@@ -31,7 +31,7 @@ begin
   require 'imlib2'
   Dimension.processor = 'imlib2'
 rescue LoadError
-  out = `convert -h`
+  out = `which convert`
   if $?.success?
     Dimension.processor = 'image_magick'
   else
