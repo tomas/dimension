@@ -15,6 +15,7 @@ module ImageMagickProcessor
   def save_as(new_file_path)
     return if new_file_path == @temp_file
     FileUtils.mv(@temp_file, new_file_path)
+    @temp_file = new_file_path # otherwise we'd get a ENOENT error when reading its data
   end
 
   def get_new_geometry
