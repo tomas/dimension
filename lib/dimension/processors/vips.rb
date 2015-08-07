@@ -82,21 +82,21 @@ module VipsProcessor
     end
   end
 
-  def resize_and_crop(w, h, gravity)
-    resize_image(new_width, new_height, :max)
+  def resize_and_crop(new_width, new_height, gravity)
+    resize(new_width, new_height, :max)
 
-    if image.x_size > new_width
+    if image.x_size > new_width.to_i
       top = 0
-      left = (image.x_size - new_width) / 2
-    elsif image.y_size > new_height
+      left = (image.x_size - new_width.to_i) / 2
+    elsif image.y_size > new_height.to_i
       left = 0
-      top = (image.y_size - new_height) / 2
+      top = (image.y_size - new_height.to_i) / 2
     else
       left = 0
       top = 0
     end
 
-    @image = image.extract_area(left, top, new_width, new_height)
+    @image = image.extract_area(left, top, new_width.to_i, new_height.to_i)
   end
 
   def crop(width, height, x, y, gravity)
@@ -108,9 +108,15 @@ module VipsProcessor
   end
 
   def get_ratio(width, height, min_or_max = :min)
-    width_ratio = width.to_f / image.x_size
+    width_ratio  = width.to_f / image.x_size
     height_ratio = height.to_f / image.y_size
-    [width_ratio, height_ratio].send(min_or_max)
+    if height.nil?
+      width_ratio
+    elsif width.nil?
+      height_ratio
+    else
+      [width_ratio, height_ratio].send(min_or_max)
+    end
   end
 
   def write(filename, strip = false)
