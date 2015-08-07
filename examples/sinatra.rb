@@ -3,11 +3,27 @@ ROOT = File.expand_path(File.dirname(__FILE__))
 require 'sinatra'
 require ROOT + '/../lib/dimension'
 
+if processor = ARGV[0]
+  puts "Using #{processor} as processor"
+  Dimension.processor = processor
+end
+
+geometries = [
+  '200x200',
+  '300x200!',
+  '200x300#',
+  '20x50:ne'
+]
+
 get '/' do
   images = Dir.glob(File.join(ROOT, 'assets') + '/*')
+  index = 0
   links = images.map do |i|
     name = File.basename(i)
-    "<a href='/images/#{name}?geometry=200x200'>#{name}</a>"
+    geom = geometries[index]
+    index += 1
+    index = 0 unless geometries[index]
+    "<a href='/images/#{name}?geometry=#{geom}'>#{name}</a>"
   end
   '<ul><li>' + links.join('</li><li>') + '</li></ul>'
 end

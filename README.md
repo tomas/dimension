@@ -5,7 +5,7 @@ Fast, simplified image resizing for Ruby. No ImageMagick.
 
 ``` rb
   require 'dimension'
-   
+
   thumb = Dimension.open('tux.png')
   thumb.generate('100x100') # => { :width => 100, :height => 100 }
   thumb.save('resized.png')
@@ -33,7 +33,7 @@ You can also pass a block, which will ensure the original image is closed after 
 ``` rb
   get '/resize/:file' do
     thumb = Dimension.open(params[:file])
-    thumb.generate('200x300#') do
+    thumb.generate('200x300@') do
       thumb.to_response
     end
   end

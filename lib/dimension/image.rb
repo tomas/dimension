@@ -18,7 +18,7 @@ class Image
 
   # Geometry string patterns
   RESIZE_GEOMETRY         = /^(\d+)?x(\d+)?[><%^!]?$|^\d+@$/ # e.g. '300x200!'
-  CROPPED_RESIZE_GEOMETRY = /^(\d+)x(\d+)[:|#](\w{1,2})?$/ # e.g. '20x50:ne'
+  CROPPED_RESIZE_GEOMETRY = /^(\d+)x(\d+)[:|@](\w{1,2})?$/ # e.g. '20x50:ne'
   CROP_GEOMETRY           = /^(\d+)x(\d+)([+-]\d+)?([+-]\d+)?(\w{1,2})?$/ # e.g. '30x30+10+10'
 
   attr_reader :file
@@ -46,6 +46,7 @@ class Image
   end
 
   def generate!(geometry, output_file = nil)
+    @geometry_string = geometry # for saving as [file]-[geometry].[ext]
     resize_to(geometry)
     save(output_file) && self
   end
@@ -71,7 +72,6 @@ class Image
 
   def save(out_file)
     new_geometry = get_new_geometry
-
     path = @path
 
     if out_file and File.directory?(out_file)
@@ -80,7 +80,7 @@ class Image
     end
 
     if out_file.nil?
-      out_file = File.join(path, @name.sub(File.extname(file), '-' + new_geometry.join('x') + File.extname(file)))
+      out_file = File.join(path, @name.sub(File.extname(file), '-' + @geometry_string + File.extname(file)))
     end
 
     log "Writing file: #{out_file}"
