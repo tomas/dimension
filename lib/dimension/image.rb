@@ -52,7 +52,7 @@ class Image
 
   def resize_to(geometry)
     case geometry
-      when RESIZE_GEOMETRY 
+      when RESIZE_GEOMETRY
         log "Resize -- #{$1}x#{$2}"
         resize($1, $2)
       when CROPPED_RESIZE_GEOMETRY
@@ -96,6 +96,17 @@ class Image
 
   def to_a
     to_response
+  end
+
+  def to_rgba
+    bytes = image_data.bytes
+    (1..bytes.length).step(4).map { |i| bytes[i..i+2] << bytes[i-1] }.flatten
+  end
+
+  # transforms data (RGBA buffer) into a array of RGB values
+  def to_rgb
+    bytes = image_data.bytes
+    (1..bytes.length).step(4).map { |i| [bytes[i-1],bytes[i],bytes[i+1]] }.flatten
   end
 
   def inspect

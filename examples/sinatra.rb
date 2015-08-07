@@ -7,7 +7,7 @@ get '/' do
   images = Dir.glob(File.join(ROOT, 'assets') + '/*')
   links = images.map do |i|
     name = File.basename(i)
-    "<a href='/images/#{name}'>#{name}</a>"
+    "<a href='/images/#{name}?geometry=200x200'>#{name}</a>"
   end
   '<ul><li>' + links.join('</li><li>') + '</li></ul>'
 end

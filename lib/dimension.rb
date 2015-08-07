@@ -6,6 +6,7 @@ module Dimension
   ROOT = File.expand_path(File.dirname(__FILE__))
 
   PROCESSORS = {
+    'vips' => 'VipsProcessor',
     'imlib2' => 'Imlib2Processor',
     'image_magick' => 'ImageMagickProcessor'
   }
@@ -27,14 +28,23 @@ module Dimension
 
 end
 
-begin
-  require 'imlib2'
-  Dimension.processor = 'imlib2'
-rescue LoadError
-  out = `which convert`
-  if $?.success?
-    Dimension.processor = 'image_magick'
-  else
-    puts "No available processors found. Please install ruby-imlib2 or ImageMagick."
+def load_processor(name)
+  # puts "Loading #{name}"
+  require name
+  Dimension.processor = name
+  true
+rescue LoadError => e
+  # puts "#{name} not found."
+  nil
+end
+
+unless load_processor 'vips'
+  unless load_processor 'imlib2'
+    out = `which convert`
+    if $?.success?
+      Dimension.processor = 'image_magick'
+    else
+      puts "No available processors found. Please install ruby-vips, ruby-imlib2 or ImageMagick."
+    end
   end
 end
