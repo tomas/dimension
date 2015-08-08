@@ -9,13 +9,14 @@ module ImageMagickProcessor
   end
 
   def image_data
-    IO.read(@temp_file)
+    @current_path = path if @current_path.nil?
+    IO.read(@current_path)
   end
 
   def save_as(new_file_path)
     return if new_file_path == @temp_file
     FileUtils.mv(@temp_file, new_file_path)
-    @temp_file = new_file_path # otherwise we'd get a ENOENT error when reading its data
+    @current_path = new_file_path
   end
 
   def get_new_geometry
