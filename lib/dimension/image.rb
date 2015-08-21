@@ -110,8 +110,8 @@ class Image
   end
 
   def inspect
-    geometry = get_new_geometry
-    "#<Dimension::Image:#{object_id} @width=#{geometry[0]}, @height=#{geometry[1]}>"
+    # geometry = get_new_geometry
+    "#<Dimension::Image:#{object_id}>" # @width=#{geometry[0]}, @height=#{geometry[1]}>"
   end
 
   def to_response(env = nil)
