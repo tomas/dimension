@@ -109,7 +109,7 @@ module Imlib2Processor
 
   def get_resize_geometry(w, h, to_longer = true)
     if to_longer or h.nil?
-      if image.w < image.h
+      if h.nil? || image.w < image.h
         new_h = ((w.to_f / image.w) * image.h).round
         return w.to_i, new_h
       else
