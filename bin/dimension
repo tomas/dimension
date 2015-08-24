@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require './lib/dimension'
-require 'benchmark'
+require_relative '../lib/dimension'
+# require 'benchmark'
 
 def usage
   puts 'Usage:   dimension [file] [geometry] [output file/path]'
