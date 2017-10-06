@@ -53,13 +53,13 @@ class Image
 
   def resize_to(geometry)
     case geometry
-      when RESIZE_GEOMETRY
+      when RESIZE_GEOMETRY # e.g. '300x200!'
         log "Resize -- #{$1}x#{$2}"
         resize($1, $2)
-      when CROPPED_RESIZE_GEOMETRY
+      when CROPPED_RESIZE_GEOMETRY # e.g. '20x50:ne'
         log "Resize and crop -- width: #{$1}, height: #{$2}, gravity: #{$3}"
         resize_and_crop($1, $2, $3)
-      when CROP_GEOMETRY
+      when CROP_GEOMETRY # e.g. '30x30+10+10'
         log "Crop -- width: #{$1}, height: #{$2}, x: #{$3}, y: #{$4}, gravity: #{$5}"
         crop($1, $2, $3, $4, $5)
       else

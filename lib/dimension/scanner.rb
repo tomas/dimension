@@ -3,7 +3,7 @@ require 'logger'
 require 'uri'
 
 module Dimension
-  
+
   class Scanner
 
     def initialize(opts = {})
@@ -11,23 +11,23 @@ module Dimension
       @root = File.expand_path(opts.delete(:root))
       @log_output = opts.delete(:log_output) || STDOUT
     end
-    
+
     def process(content)
       images = content.scan(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/i)
       return [] if images.empty?
-    
+
       paths = images.map { |img| URI.parse(img[0]).path }.uniq
       paths.map do |path|
-    
+
         full = File.join(@root, path)
         if File.exist?(full)
           logger.info "Image exists in #{@root}: #{path}"
           next
         end
-    
+
         logger.info "Image not found! #{path}"
         no_extension = File.basename(path, File.extname(path))
-    
+
         if geometry = no_extension[/((\d+)?x(\d+)?.?)$/i, 1]
           original = File.join(@root, path.sub(/-?#{geometry}/, ''))
 
@@ -48,11 +48,11 @@ module Dimension
     end
 
     private
-    
+
     def logger
       Logger.new(@log_output)
     end
-  
+
     def resize_image(file, geometry, destination)
       thumb = Dimension.open(file)
       thumb.generate!(geometry, destination)

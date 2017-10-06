@@ -2,27 +2,49 @@ require './lib/dimension'
 require 'benchmark'
 
 file = ARGV[0] or abort('File needed')
-geometry = ARGV[1] or abort('Geometry required: 100x100#ne')
+geometry = ARGV[1] or abort('Geometry required: 100x100')
 
-out = "#{File.basename(file)}.out#{File.extname(file)}"
+ext  = File.extname(file)
+base = File.basename(file, ext)
 puts "Processing #{file}"
 
 Benchmark.bm do |x|
 
-  x.report do
+  begin
     Dimension.processor = 'imlib2'
-    a = Dimension.open(file)
-    res = a.generate!(geometry)
-    puts res.inspect
+    x.report do
+      a = Dimension.open(file)
+      res = a.generate!(geometry, [base, '-imlib2', ext].join)
+      puts res.inspect
+    end
+  rescue LoadError
+    puts "imlib2 missing."
   end
 
   sleep 1
 
-  x.report do
+  begin
     Dimension.processor = 'image_magick'
-    b = Dimension.open(file)
-    res = b.generate!(geometry)
-    puts res.inspect
+    x.report do
+      b = Dimension.open(file)
+      res = b.generate!(geometry, [base, '-image_magick', ext].join)
+      puts res.inspect
+    end
+  rescue LoadError => e
+    puts "imagemagick missing."
+  end
+
+  sleep 1
+
+  begin
+    Dimension.processor = 'vips'
+    x.report do
+      b = Dimension.open(file)
+      res = b.generate!(geometry, [base, '-vips', ext].join)
+      puts res.inspect
+    end
+  rescue LoadError => e
+    puts "vips missing."
   end
 
 end

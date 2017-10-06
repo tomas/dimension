@@ -10,10 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/tomas/dimension"
   s.summary     = "Native, in-process image resizing in Ruby."
   s.description = "Yes, there are other graphic libraries besides ImageMagick."
-
   s.required_rubygems_version = ">= 1.3.6"
-  s.rubyforge_project         = "dimension"
-
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'

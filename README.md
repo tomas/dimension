@@ -1,7 +1,6 @@
-Dimension
-=========
+# Dimension
 
-Fast, simplified image resizing for Ruby. No ImageMagick.
+Lightweight image resizing for Ruby, either with vips, imlib2 or ImageMagick.
 
 ``` rb
   require 'dimension'
@@ -18,7 +17,7 @@ Or generate and write file automatically.
   thumb.generate!('100x300!') # will write file as 'tux-100x300.png'
 ```
 
-# In memory processing
+## In memory processing
 
 Yes sir, we have it.
 
@@ -39,16 +38,49 @@ You can also pass a block, which will ensure the original image is closed after 
   end
 ```
 
-# Resizing geometries
+# Installation
 
-This is taken directly from the excellent [Dragonfly gem](http://markevans.github.io/dragonfly/imagemagick/#processors). The N/S/W/E gravities are not supported, though.
+For vips backend:
 
-Author
-======
+    # install library
+    apt install libvips42
+    # then, the ruby bindings
+    gem install ruby-vips
+    # and in case you don't get a libvips.so symlink
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
+
+For imlib2 backend:
+
+    # install deps
+    sudo apt install libimlib2-dev
+    # clone repo
+    git clone https://github.com/pepabo/imlib2-ruby
+    cd imlib2-ruby
+    # build/install
+    ruby extconf.rb
+    make
+    make install
+    # and clean up
+    cd ..
+    rm -Rf imlib2-ruby
+
+For ImageMagick, there's no gem required. Just make sure the binaries (identify, convert) are in place:
+
+    sudo apt install imagemagick
+
+# TODO
+
+ - [ ] Support for N/S/W/E gravities.
+ - [ ] Tests (e.g. ensure geometry calculation works equally across backends).
+
+# Related
+
+ - [Dragonfly gem](http://markevans.github.io/dragonfly). This is where the original inspiration came from.
+
+# Author
 
 Written by Tomás Pollak.
 
-Copyright
-=========
+# Copyright
 
 (c) Fork, Ltd. MIT Licensed.

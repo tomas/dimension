@@ -1,33 +1,31 @@
 # from examples at
-# - https://github.com/eltiare/carrierwave-vips/blob/master/lib/carrierwave/vips.rb
-# - https://github.com/jcupitt/ruby-vips/tree/master/examples
-
+# - https://github.com/eltiare/carrierwave-Vips/blob/master/lib/carrierwave/Vips.rb
+# - https://github.com/jcupitt/ruby-Vips/tree/master/examples
 require 'vips'
 
 module VipsProcessor
 
   FORMAT_OPTS = {
     'jpeg' => { :quality => 0.9 },
-    'png'  => { :compression => 6, :interlace => false }
+    'png'  => { :compression => 8, :interlace => false }
   }
 
   SHARPEN_MASK = begin
-    conv_mask = [
+    ::Vips::Image.new_from_array [
       [ -1, -1, -1 ],
       [ -1, 24, -1 ],
       [ -1, -1, -1 ]
-    ]
-    ::VIPS::Mask.new conv_mask, 16
+    ], 16
   end
 
   def image
     @image ||= if format == 'jpeg'
-        VIPS::Image.jpeg(@file, :sequential => true)
-      elsif format == 'png'
-        VIPS::Image.png(@file, :sequential => true)
-      else
-        VIPS::Image.new(@file)
-      end
+      Vips::Image.jpeg(@file, :sequential => true)
+    elsif format == 'png'
+      Vips::Image.png(@file, :sequential => true)
+    else
+      Vips::Image.new(@file)
+    end
   end
 
   def geometry
@@ -53,7 +51,7 @@ module VipsProcessor
   def close
     log "Closing image and cutting thread..."
     @image = nil
-    VIPS::thread_shutdown
+    Vips::thread_shutdown
     # image.delete!(true) # free image, and de-cache it too
   end
 
@@ -133,9 +131,9 @@ module VipsProcessor
 
   def writer_class
     case format
-      when 'jpeg' then VIPS::JPEGWriter
-      when 'png' then VIPS::PNGWriter
-      else VIPS::Writer
+      when 'jpeg' then Vips::JPEGWriter
+      when 'png' then Vips::PNGWriter
+      else Vips::Writer
     end
   end
 
